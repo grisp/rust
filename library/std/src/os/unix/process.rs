@@ -25,6 +25,10 @@ cfg_select! {
         type UserId = i32;
         type GroupId = i32;
     }
+    target_os = "rtems" => {
+        type UserId = libc::uid_t;
+        type GroupId = libc::gid_t;
+    }
     _ => {
         type UserId = u32;
         type GroupId = u32;

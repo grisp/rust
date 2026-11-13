@@ -8,6 +8,12 @@ fn main() {
         env::var("CARGO_CFG_TARGET_VENDOR").expect("CARGO_CFG_TARGET_VENDOR was not set");
     let target_env = env::var("CARGO_CFG_TARGET_ENV").expect("CARGO_CFG_TARGET_ENV was not set");
 
+    println!("cargo:rustc-check-cfg=cfg(rtems_newlib_no_tls_errno)");
+    println!("cargo:rerun-if-env-changed=RUSTC_STD_RTEMS_NEWLIB_NO_TLS_ERRNO");
+    if target_os == "rtems" && env::var_os("RUSTC_STD_RTEMS_NEWLIB_NO_TLS_ERRNO").is_some() {
+        println!("cargo:rustc-cfg=rtems_newlib_no_tls_errno");
+    }
+
     println!("cargo:rustc-check-cfg=cfg(netbsd10)");
     if target_os == "netbsd" && env::var("RUSTC_STD_NETBSD10").is_ok() {
         println!("cargo:rustc-cfg=netbsd10");

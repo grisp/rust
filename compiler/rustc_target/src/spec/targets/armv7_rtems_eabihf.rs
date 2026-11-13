@@ -28,8 +28,8 @@ pub(crate) fn target() -> Target {
             features: "+thumb2,+neon,+vfp3".into(),
             max_atomic_width: Some(64),
             emit_debug_gdb_scripts: false,
-            // GCC defaults to 8 for arm-none here.
-            c_enum_min_bits: Some(8),
+            // Match the int-sized C enums used by the RTEMS ARM GCC toolchain.
+            c_enum_min_bits: Some(32),
             eh_frame_header: false,
             no_default_libraries: false,
             env: Env::Newlib,

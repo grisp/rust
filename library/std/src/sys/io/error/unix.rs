@@ -78,7 +78,7 @@ pub fn errno() -> i32 {
     unsafe { libc::errnoGet() }
 }
 
-#[cfg(target_os = "rtems")]
+#[cfg(all(target_os = "rtems", not(rtems_newlib_no_tls_errno)))]
 #[inline]
 pub fn errno() -> i32 {
     unsafe extern "C" {
@@ -87,6 +87,16 @@ pub fn errno() -> i32 {
     }
 
     unsafe { _tls_errno as i32 }
+}
+
+#[cfg(all(target_os = "rtems", rtems_newlib_no_tls_errno))]
+#[inline]
+pub fn errno() -> i32 {
+    unsafe extern "C" {
+        fn __errno() -> *mut c_int;
+    }
+
+    unsafe { *__errno() as i32 }
 }
 
 #[cfg(target_os = "dragonfly")]
